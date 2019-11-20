@@ -14,7 +14,7 @@ cd banking-services
 mvn spring-boot:run
 Acesse os endpoints através da url http://localhost:8080/banking
 ```
-As requisições aceitas são todas do tipo POST e podem ser enviadas através de um cliente HTTP qualquer, como o Postman. O fluxo de autenticação segue o padrão OAuth2, com o modo de autorização por senha, ou seja, o usuário deve enviar uma requisição para localhost:8080/banking/oauth/token com o client id = cliente e o client secret = senha e os dados de acesso do seu usuário (grant_type, username e password). Os usuários devem ser previamente cadastrados como um "banco" ou "cliente" através dos endpoints correspondentes. Os demais endpoints só podem ser acessados se o token estiver presente no cabeçalho da requisição.
+As requisições aceitas são todas do tipo POST e podem ser enviadas através de um cliente HTTP qualquer, como o Postman. O fluxo de autenticação segue o padrão OAuth2, com o modo de autorização por senha, ou seja, o usuário deve enviar uma requisição para localhost:8080/banking/oauth/token com o client id = cliente e o client secret = senha e os dados de acesso do seu usuário (grant_type, username e password). Os usuários devem ser previamente cadastrados como um "banco" ou "cliente" através dos endpoints correspondentes. Os demais endpoints só podem ser acessados se o token estiver presente no cabeçalho da requisição. O token de acesso expira após 1 hora.
 
 ### Endpoints
 ```

@@ -3,7 +3,7 @@ package com.infoway.banking.controllers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -60,7 +60,7 @@ class UsuarioControllerTest {
 	@Autowired
 	private BancoRepository bancoRepository;
 	
-	@AfterEach
+	@BeforeEach
 	public void limpar() {
 		this.bancoRepository.deleteAll();
 		this.clienteRepository.deleteAll();
@@ -76,8 +76,7 @@ class UsuarioControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.data.codigo").value(CODIGO_BANCO))
-				.andExpect(jsonPath("$.data.nome").value(NOME_BANCO))
-				.andExpect(jsonPath("$.data.senha").isNotEmpty())
+				.andExpect(jsonPath("$.data.nomeBanco").value(NOME_BANCO))
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
 	
@@ -86,7 +85,11 @@ class UsuarioControllerTest {
 		Banco banco = TesteUtils.criarBanco(TesteUtils.BANCO_001);
 		bancoService.persistir(banco);
 		BancoDto bancoDto = new BancoDto(banco);
-		TesteUtils.fazerRequisicaoInvalida(bancoDto, "error.existing.code", URL_CADASTRAR_BANCO, mvc, ms);
+		bancoDto.setNomeUsuario("nome");
+		TesteUtils.testarRequisicaoInvalida(bancoDto, "error.existing.code", URL_CADASTRAR_BANCO, mvc, ms);
+		bancoDto = new BancoDto(banco);
+		bancoDto.setCodigo("000");
+		TesteUtils.testarRequisicaoInvalida(bancoDto, "error.existing.username", URL_CADASTRAR_BANCO, mvc, ms);
 	}
 	
 	@Test
@@ -99,8 +102,7 @@ class UsuarioControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.data.cpf").value(CPF_CLIENTE))
-				.andExpect(jsonPath("$.data.nome").value(NOME_CLIENTE))
-				.andExpect(jsonPath("$.data.senha").isNotEmpty())
+				.andExpect(jsonPath("$.data.nomeCliente").value(NOME_CLIENTE))
 				.andExpect(jsonPath("$.errors").isEmpty());
 	}
 	
@@ -109,8 +111,11 @@ class UsuarioControllerTest {
 		Cliente cliente = TesteUtils.criarCliente(TesteUtils.CLIENTE_70336818017);
 		clienteService.persistir(cliente);
 		ClienteDto clienteDto = new ClienteDto(cliente);
-		TesteUtils.fazerRequisicaoInvalida(clienteDto, "error.existing.cpf", URL_CADASTRAR_CLIENTE, mvc, ms);
-		clienteService.remover(CPF_CLIENTE);
+		clienteDto.setNomeUsuario("nome");
+		TesteUtils.testarRequisicaoInvalida(clienteDto, "error.existing.cpf", URL_CADASTRAR_CLIENTE, mvc, ms);
+		clienteDto = new ClienteDto(cliente);
+		clienteDto.setCpf("20867531010");
+		TesteUtils.testarRequisicaoInvalida(clienteDto, "error.existing.username", URL_CADASTRAR_CLIENTE, mvc, ms);
 	}
 	
 }

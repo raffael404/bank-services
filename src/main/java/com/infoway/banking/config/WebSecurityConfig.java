@@ -22,6 +22,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) {
 		web.ignoring().antMatchers("/usuario/cadastrar/**");
+		web.ignoring().antMatchers(
+				"/", "/csrf", "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**");
 	}
 	
 	@Bean
